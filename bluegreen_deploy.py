@@ -220,7 +220,8 @@ def find_drained_task_ids(app, listeners, haproxy_count):
 
     drained_task_ids = []
     for svname, task in tasks:
-        task_listeners = [l for l in drained_listeners if l.svname == svname]
+        name = re.sub('_\d+$', '', svname)
+        task_listeners = [l for l in drained_listeners if name in l.svname]
         if len(task_listeners) == haproxy_count:
             drained_task_ids.append(task['id'])
 
@@ -483,8 +484,11 @@ def prepare_deploy(args, previous_deploys, app):
 
 
 def load_app_json(args):
-    with open(args.json) as content_file:
-        return json.load(content_file)
+    try:
+        with open(args.json) as content_file:
+            return json.load(content_file)
+    except:
+        return json.loads(args.json)
 
 
 def safe_resume_deploy(args, previous_deploys):

@@ -1,0 +1,4 @@
+from python:3-onbuild
+
+ADD . /marathon-lb
+WORKDIR /marathon-lb
